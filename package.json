@@ -1,0 +1,22 @@
+{
+  "name": "@woohahdev/rest-api",
+  "version": "0.1.0",
+  "exports": "./dist/index.js",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "bun build --minify --outdir=dist ./src/index.ts",
+    "format": "prettier --write .",
+    "test": "bun test:format && bun test:tsc",
+    "test:format": "prettier --check .",
+    "test:tsc": "tsc --noEmit",
+    "test:unit": "bun test"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "3.0.3",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "bun-types": "1.1.20"
+  }
+}
