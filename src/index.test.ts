@@ -2,11 +2,17 @@ import { WoohahApi } from ".";
 import { expect, test } from "bun:test";
 
 class HelloWorld {
+  app?: WoohahApi;
   setup(app: WoohahApi) {
-    app.registerRoute("hello-world", async (request) => {
-      return new Response(JSON.stringify({ message: "Hello World" }), {
-        headers: app.headers,
-      });
+    this.app = app;
+    app.registerRoute("hello-world", this.fetch.bind(this));
+  }
+
+  async fetch(request: Request) {
+    const url = new URL(request.url);
+    const name = url.searchParams.get("name");
+    return new Response(JSON.stringify({ message: `Hello ${name}` }), {
+      headers: this.app!.headers,
     });
   }
 }
@@ -18,9 +24,9 @@ const app = new WoohahApi({
 });
 
 test("Hello World", async () => {
-  const response = await app.fetch(
-    new Request("http://localhost:3000/hello-world"),
-  );
+  const url = new URL("http://localhost:3000/hello-world");
+  url.searchParams.set("name", "World");
+  const response = await app.fetch(new Request(url.toString()));
   const result = await response.json();
 
   expect(result.message).toBe("Hello World");
