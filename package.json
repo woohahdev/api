@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "bun build --minify --outdir=dist ./src/index.ts",
+    "publish": "npm publish --access public"
     "format": "prettier --write .",
     "test": "bun test:format && bun test:tsc",
     "test:format": "prettier --check .",
