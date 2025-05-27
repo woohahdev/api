@@ -1,23 +1,25 @@
-export interface WoohahApiOptions {
-  plugins: Record<string, { setup: (app: WoohahApi) => void }>;
+export interface ApiOptions {
+  plugins: Record<string, { setup: (app: Api) => void }>;
 }
 
-export class WoohahApi {
+export class Api {
   routes: Map<string, (request: Request) => Promise<Response>> = new Map();
-  plugins: WoohahApiOptions["plugins"] = {};
+  plugins: ApiOptions["plugins"] = {};
 
-  constructor(options: WoohahApiOptions) {
+  constructor(options: ApiOptions) {
     this.plugins = options.plugins;
     for (const plugin of Object.values(this.plugins)) {
       plugin.setup(this);
     }
   }
 
-  get fetch() {
-    return this._fetch.bind(this);
+  get app() {
+    return {
+      fetch: this.fetch.bind(this),
+    };
   }
 
-  registerRoute(id: string, route: (request: Request) => Promise<Response>) {
+  addRoute(id: string, route: (request: Request) => Promise<Response>) {
     this.routes.set(id, route);
   }
 
@@ -28,7 +30,7 @@ export class WoohahApi {
     };
   }
 
-  async _fetch(request: Request) {
+  async fetch(request: Request) {
     try {
       const url = new URL(request.url);
       const [_, routeId] = url.pathname.split("/");

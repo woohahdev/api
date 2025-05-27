@@ -6,11 +6,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "declaration": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "types": ["bun-types"],
-    "paths": {
-      "@woohah-productions/zoho-client": ["../zoho-client/src/index.ts"]
-    }
+    "types": ["bun-types"]
   }
 }

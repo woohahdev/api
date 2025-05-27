@@ -1,11 +1,11 @@
-import { WoohahApi } from ".";
+import { Api } from ".";
 import { expect, test } from "bun:test";
 
 class HelloWorld {
-  app?: WoohahApi;
-  setup(app: WoohahApi) {
+  app?: Api;
+  setup(app: Api) {
     this.app = app;
-    app.registerRoute("hello-world", this.fetch.bind(this));
+    app.addRoute("hello-world", this.fetch.bind(this));
   }
 
   async fetch(request: Request) {
@@ -17,7 +17,7 @@ class HelloWorld {
   }
 }
 
-const app = new WoohahApi({
+const app = new Api({
   plugins: {
     helloWorld: new HelloWorld(),
   },
@@ -26,8 +26,7 @@ const app = new WoohahApi({
 test("Hello World", async () => {
   const url = new URL("http://localhost:3000/hello-world");
   url.searchParams.set("name", "World");
-  const response = await app.fetch(new Request(url.toString()));
+  const response = await app.app.fetch(new Request(url.toString()));
   const result = await response.json();
-
   expect(result.message).toBe("Hello World");
 });
